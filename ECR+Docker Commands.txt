@@ -1,0 +1,62 @@
+					How to Push Docker image into Amazon ECR
+
+What are we going to do in this lab?
+       1. Create an IAM role with ContainerRegistryFullAccess
+       2. Create EC2 insatnce(ubuntu) and attach the created IAM role (Install Docker in this machine. 
+       3. Create one Repository in AWS ECR
+       4. Download pythonApp from Bitbucket.
+       5. Build docker image for the Python App
+       6. Push docker image to ECR
+       7. Run python app in Docker container
+
+Pre-requistes:
+       *EC2 instance up and running with Docker installed
+       *Make sure you open port 8081 (Security Group)
+       *Install aws cli
+
+@Create one ubuntu machine with attached IAM role.
+1)EC2 instance up and running with Docker installed (Commands to install docker ubuntu machine):
+   $curl -fsSL https://get.docker.com -o get-docker.sh( this will download shell script in the machine)
+
+   >Run the docker file
+   $sh get-docker.sh  ( This will execute the shell script, which will install docker )
+
+   >To check the docker is installed or not
+   $docker --version
+
+   >To download a docker image 
+   $docker pull image name (Image name can get from hub.docker.com)
+
+2)Create one Repository in AWS ECR.
+    >Go to Elastic container registry and create one Repository and enter the details.
+    >Once repo is created, choose the repo and click on view push commands. Note down the account ID.
+    
+3)Installing aws cli on ubuntu machine
+    >Go to AWS console and search for ECR
+    >Click on Create Repository
+    >Enter name for your repo - all lower case and Click create repository
+    >Once repo is created, choose the repo and click on view push commands. Note down the account ID
+    >Copy the first command to install AWS cli 
+   $sudo apt install awscli -y
+    >Once AWS CLI is installed, you can verify the installation:
+    $aws --version
+
+4)Now login to AWS ECR using cli (After using below command you will get 
+    $aws ecrget-login-password --region (your_region) | docker login --username AWS --password-stdin (your_ account_ID).dkr.ecr.us-east-1.amazonaws.com
+  
+5)Now let's build a docker image, I have already created a public repo in Bitbucket. All you need to do is perform the command below to clone my repo:
+    $git clone https://bitbucket.org/ananthkannan/mydockerrepo; cd mydockerrepo/pythonApp
+
+6)Run the command which builds a docker image.
+    $ docker build . -t mypythonapp 
+
+7)Now tag Docker image you had build
+    $ docker tag mypythonapp:latest your_account_id.dkr.ecr.us-east-2.amazonaws.com/docker:latest
+
+8)Now push the image into your ECR repository 
+    $docker push your_acc_id.dkr.ecr.us-east-2.amazonaws.com/your-ecr-repo-name:latest
+
+9)To run a Docker container from Docker image.
+    $ docker run --name myDockerApp -p 8082:8081 -d mypythonapp
+    >MyDockerApp is the app name (Enter any name as your wish )
+    >mypythonappis the image name we downloaded from bitbucket (git repository)
