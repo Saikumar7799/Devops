@@ -4,7 +4,7 @@
     <head>  
     <meta charset="utf-8">  
     <title>  
-         Calculator using HTML Example  
+         Calculator App  
     </title>  
     <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">  
     <!-- CSS property to create interactive  
@@ -87,7 +87,7 @@ input[type=text] {
 </head>  
 <body>  
     <div class = "title"  align="center">  
-        Example of Calculator using HTML  
+        Sample Calculator App   
     </div>  
     <form name="Calculator" class = "calculator" >  
 <table border="2" align="center" cellpadding="15" cellspacing="12" bgcolor="#c0c0c0">  
